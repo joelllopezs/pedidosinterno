@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos Colaboradores · Intercoffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+
+<!-- Símbolos reutilizáveis: grão de café e folha -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="ic-bean" viewBox="0 0 64 100">
+      <path d="M32 2C14 2 2 24 2 50s12 48 30 48 30-22 30-48S50 2 32 2z" fill="currentColor"/>
+      <path d="M32 6C24 20 24 80 32 94" stroke="var(--cream)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-leaf" viewBox="0 0 100 60">
+      <path d="M2 58C10 20 40 2 98 2 90 40 60 58 2 58z" fill="currentColor"/>
+      <path d="M6 54C30 34 55 18 92 6" stroke="var(--cream)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Elementos decorativos de fundo (grãos e folhas) -->
+<div class="bg-deco" aria-hidden="true">
+  <svg style="width:70px;top:120px;left:-20px;color:var(--maroon);transform:rotate(-20deg)"><use href="#ic-bean" width="70" height="110"/></svg>
+  <svg style="width:90px;top:420px;right:-30px;color:var(--tan);transform:rotate(15deg)"><use href="#ic-leaf" width="90" height="54"/></svg>
+  <svg style="width:55px;top:760px;left:8%;color:var(--maroon);transform:rotate(35deg)"><use href="#ic-bean" width="55" height="86"/></svg>
+  <svg style="width:80px;bottom:80px;right:6%;color:var(--tan);transform:rotate(-25deg)"><use href="#ic-leaf" width="80" height="48"/></svg>
+  <svg style="width:45px;bottom:260px;left:-10px;color:var(--maroon);transform:rotate(10deg)"><use href="#ic-bean" width="45" height="70"/></svg>
+</div>
+
+<header>
+  <div class="header-deco" aria-hidden="true">
+    <svg style="width:120px;top:-20px;left:-20px;color:var(--tan)"><use href="#ic-leaf" width="120" height="72"/></svg>
+    <svg style="width:90px;bottom:10px;right:-10px;color:var(--tan)"><use href="#ic-bean" width="90" height="140"/></svg>
+    <svg style="width:50px;top:20px;right:18%;color:var(--tan)"><use href="#ic-bean" width="50" height="78"/></svg>
+  </div>
+  <div class="logo-badge">
+    <img src="images/logo.png" alt="Intercoffee — Desde 1962">
+  </div>
+  <h1>Pedidos Colaboradores</h1>
+  <p>Intercoffee &middot; Catálogo interno de produtos</p>
+  <div class="wave"></div>
+</header>
+
+<main>
+
+  <!-- STEP 1: DADOS DO COLABORADOR -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Seus dados</h2>
+        <span class="sub">Preencha para identificarmos seu pedido</span>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Ex: Maria da Silva Souza" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>CPF <span class="req">*</span></label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PRODUTOS -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Escolha os produtos</h2>
+        <span class="sub">Selecione a categoria, o item e a quantidade</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Categoria <span class="req">*</span></label>
+      <select id="categoria">
+        <option value="">Selecione uma categoria...</option>
+      </select>
+    </div>
+
+    <div id="productPanel" class="product-panel">
+      <div class="qty-add">
+        <div class="field prod-field">
+          <label>Produto</label>
+          <select id="produto"></select>
+        </div>
+        <div class="field">
+          <label>Quantidade</label>
+          <input type="text" id="quantidade" value="1" inputmode="numeric">
+        </div>
+        <button class="btn btn-add" id="addBtn" type="button">+ Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Seu pedido</h2>
+        <span class="sub">Itens adicionados até agora</span>
+      </div>
+    </div>
+    <div class="ticket" id="ticket">
+      <div class="ticket-empty">Nenhum item adicionado ainda.</div>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Forma de pagamento</h2>
+        <span class="sub">Como você prefere pagar?</span>
+      </div>
+    </div>
+    <div class="pay-options">
+      <div class="pay-card" data-pay="PIX">PIX</div>
+      <div class="pay-card" data-pay="Boleto">Boleto</div>
+    </div>
+  </div>
+
+  <!-- FINALIZE -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Finalizar pedido</h2>
+        <span class="sub">Seu pedido será enviado automaticamente por e-mail para a equipe Intercoffee</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="finalizeBtn" type="button">Finalizar Pedido</button>
+    <div class="msg" id="formMsg"></div>
+  </div>
+
+</main>
+
+<footer>
+  <svg width="18" height="28" style="color:var(--tan);vertical-align:middle;margin-right:6px;opacity:.7"><use href="#ic-bean" width="18" height="28"/></svg>
+  Intercoffee &middot; Desde 1962 &middot; Uso interno &middot; Colaboradores
+</footer>
+
+<script src="./engine/engine.js">
+
+</script>
+</body>
+</html>

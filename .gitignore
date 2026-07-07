@@ -1,0 +1,14 @@
+# Segredos — nunca versionar
+.env
+.env.local
+.env.*.local
+
+# Dependências
+node_modules/
+
+# Vercel
+.vercel/
+
+# Sistema
+.DS_Store
+Thumbs.db

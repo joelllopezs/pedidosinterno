@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos Colaboradores · Intercoffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon:#6B1220;
+    --maroon-dark:#4A0D16;
+    --tan:#C9A66B;
+    --tan-light:#E9DBBD;
+    --cream:#FAF5EC;
+    --ink:#2B1B12;
+    --ink-soft:#6B5C4F;
+    --white:#FFFFFF;
+    --line:#E4D9C6;
+    --ok:#3E6B4A;
+    --err:#A23B2C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    letter-spacing:-0.01em;
+  }
+
+  /* HEADER */
+  header{
+    background:linear-gradient(180deg,var(--maroon) 0%, var(--maroon-dark) 100%);
+    color:var(--white);
+    padding:36px 20px 48px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .header-deco{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0.16;
+  }
+  .header-deco svg{position:absolute;}
+  .logo-badge{
+    width:150px;
+    background:var(--white);
+    border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 18px;
+    padding:12px 16px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);
+    position:relative;
+    z-index:1;
+  }
+  .logo-badge img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
+  header h1{
+    font-size:clamp(26px,5vw,38px);
+    margin:0 0 6px;
+    font-weight:700;
+    position:relative;
+    z-index:1;
+  }
+  header p{
+    margin:0;
+    color:var(--tan-light);
+    font-size:15px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    position:relative;
+    z-index:1;
+  }
+  .wave{
+    position:absolute;
+    bottom:-1px;left:0;right:0;
+    height:24px;
+    background:var(--cream);
+    border-radius:50% 50% 0 0/24px 24px 0 0;
+    z-index:1;
+  }
+
+  /* DECORATIVE MOTIFS (folhas & grãos de café) */
+  .bg-deco{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
+  .bg-deco svg{
+    position:absolute;
+    opacity:0.07;
+  }
+  main{position:relative; z-index:1;}
+  .card{position:relative; overflow:hidden;}
+  .card-deco{
+    position:absolute;
+    right:-14px;
+    bottom:-14px;
+    opacity:0.06;
+    pointer-events:none;
+  }
+
+  /* MAIN */
+  main{
+    max-width:760px;
+    margin:0 auto;
+    padding:36px 18px 80px;
+  }
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 22px;
+    margin-bottom:22px;
+  }
+  .step-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .step-num{
+    flex:none;
+    width:34px;height:34px;
+    border-radius:50%;
+    background:var(--maroon);
+    color:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:15px;
+  }
+  .step-head h2{
+    font-size:19px;
+    margin:0;
+    font-weight:600;
+  }
+  .step-head span.sub{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  label .req{color:var(--maroon);}
+  .field{margin-bottom:16px;}
+  input[type=text], select{
+    width:100%;
+    padding:11px 13px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    font-size:15px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--white);
+    transition:border-color .15s;
+  }
+  input[type=text]:focus, select:focus{
+    outline:none;
+    border-color:var(--maroon);
+  }
+  .row2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:520px){
+    .row2{grid-template-columns:1fr;}
+  }
+
+  .product-panel{
+    display:none;
+    border-top:1px dashed var(--line);
+    padding-top:16px;
+    margin-top:4px;
+  }
+  .product-panel.active{display:block;}
+
+  .qty-add{
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+    margin-top:14px;
+  }
+  .qty-add .field{margin-bottom:0;flex:none;width:110px;}
+  .qty-add .prod-field{margin-bottom:0;flex:1;}
+  button{
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+  }
+  .btn{
+    border:none;
+    border-radius:9px;
+    padding:12px 18px;
+    font-weight:600;
+    font-size:14.5px;
+  }
+  .btn-add{
+    background:var(--tan);
+    color:var(--maroon-dark);
+    white-space:nowrap;
+  }
+  .btn-add:hover{background:#dcc28f;}
+  .btn-primary{
+    background:var(--maroon);
+    color:var(--white);
+    width:100%;
+    padding:15px;
+    font-size:16px;
+    border-radius:10px;
+  }
+  .btn-primary:hover{background:var(--maroon-dark);}
+  .btn-primary:disabled{background:#cbbfb2;cursor:not-allowed;}
+
+  /* CART / TICKET */
+  .ticket{
+    border:1px dashed var(--tan);
+    border-radius:10px;
+    background:var(--cream);
+    padding:4px 14px;
+  }
+  .ticket-empty{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:14px;
+    padding:22px 0;
+  }
+  .ticket-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:12px 0;
+    border-bottom:1px dotted var(--line);
+    font-size:14px;
+  }
+  .ticket-row:last-child{border-bottom:none;}
+  .ticket-row .info{flex:1;}
+  .ticket-row .code{
+    display:block;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+  }
+  .ticket-row .qty-badge{
+    background:var(--tan-light);
+    color:var(--maroon-dark);
+    border-radius:20px;
+    padding:3px 10px;
+    font-weight:600;
+    font-size:12.5px;
+    flex:none;
+  }
+  .remove-btn{
+    background:none;border:none;
+    color:var(--err);
+    font-size:18px;
+    line-height:1;
+    padding:2px 4px;
+    flex:none;
+  }
+
+  /* PAYMENT */
+  .pay-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  @media (max-width:420px){
+    .pay-options{grid-template-columns:1fr;}
+  }
+  .pay-card{
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+    font-weight:600;
+    font-size:14.5px;
+    user-select:none;
+  }
+  .pay-card.selected{
+    border-color:var(--maroon);
+    background:var(--tan-light);
+    color:var(--maroon-dark);
+  }
+
+  .msg{
+    font-size:13.5px;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-top:14px;
+    display:none;
+  }
+  .msg.show{display:block;}
+  .msg.error{background:#F7E3DE;color:var(--err);}
+  .msg.success{background:#E4EFE6;color:var(--ok);}
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:0 20px 30px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Símbolos reutilizáveis: grão de café e folha -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="ic-bean" viewBox="0 0 64 100">
+      <path d="M32 2C14 2 2 24 2 50s12 48 30 48 30-22 30-48S50 2 32 2z" fill="currentColor"/>
+      <path d="M32 6C24 20 24 80 32 94" stroke="var(--cream)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ic-leaf" viewBox="0 0 100 60">
+      <path d="M2 58C10 20 40 2 98 2 90 40 60 58 2 58z" fill="currentColor"/>
+      <path d="M6 54C30 34 55 18 92 6" stroke="var(--cream)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Elementos decorativos de fundo (grãos e folhas) -->
+<div class="bg-deco" aria-hidden="true">
+  <svg style="width:70px;top:120px;left:-20px;color:var(--maroon);transform:rotate(-20deg)"><use href="#ic-bean" width="70" height="110"/></svg>
+  <svg style="width:90px;top:420px;right:-30px;color:var(--tan);transform:rotate(15deg)"><use href="#ic-leaf" width="90" height="54"/></svg>
+  <svg style="width:55px;top:760px;left:8%;color:var(--maroon);transform:rotate(35deg)"><use href="#ic-bean" width="55" height="86"/></svg>
+  <svg style="width:80px;bottom:80px;right:6%;color:var(--tan);transform:rotate(-25deg)"><use href="#ic-leaf" width="80" height="48"/></svg>
+  <svg style="width:45px;bottom:260px;left:-10px;color:var(--maroon);transform:rotate(10deg)"><use href="#ic-bean" width="45" height="70"/></svg>
+</div>
+
+<header>
+  <div class="header-deco" aria-hidden="true">
+    <svg style="width:120px;top:-20px;left:-20px;color:var(--tan)"><use href="#ic-leaf" width="120" height="72"/></svg>
+    <svg style="width:90px;bottom:10px;right:-10px;color:var(--tan)"><use href="#ic-bean" width="90" height="140"/></svg>
+    <svg style="width:50px;top:20px;right:18%;color:var(--tan)"><use href="#ic-bean" width="50" height="78"/></svg>
+  </div>
+  <div class="logo-badge">
+    <img src="images/logo.png" alt="Intercoffee — Desde 1962">
+  </div>
+  <h1>Pedidos Colaboradores</h1>
+  <p>Intercoffee &middot; Catálogo interno de produtos</p>
+  <div class="wave"></div>
+</header>
+
+<main>
+
+  <!-- STEP 1: DADOS DO COLABORADOR -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Seus dados</h2>
+        <span class="sub">Preencha para identificarmos seu pedido</span>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Ex: Maria da Silva Souza" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>CPF <span class="req">*</span></label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PRODUTOS -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Escolha os produtos</h2>
+        <span class="sub">Selecione a categoria, o item e a quantidade</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Categoria <span class="req">*</span></label>
+      <select id="categoria">
+        <option value="">Selecione uma categoria...</option>
+      </select>
+    </div>
+
+    <div id="productPanel" class="product-panel">
+      <div class="qty-add">
+        <div class="field prod-field">
+          <label>Produto</label>
+          <select id="produto"></select>
+        </div>
+        <div class="field">
+          <label>Quantidade</label>
+          <input type="text" id="quantidade" value="1" inputmode="numeric">
+        </div>
+        <button class="btn btn-add" id="addBtn" type="button">+ Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Seu pedido</h2>
+        <span class="sub">Itens adicionados até agora</span>
+      </div>
+    </div>
+    <div class="ticket" id="ticket">
+      <div class="ticket-empty">Nenhum item adicionado ainda.</div>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Forma de pagamento</h2>
+        <span class="sub">Como você prefere pagar?</span>
+      </div>
+    </div>
+    <div class="pay-options">
+      <div class="pay-card" data-pay="PIX">PIX</div>
+      <div class="pay-card" data-pay="Boleto">Boleto</div>
+    </div>
+  </div>
+
+  <!-- FINALIZE -->
+  <div class="card">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Finalizar pedido</h2>
+        <span class="sub">Seu pedido será enviado automaticamente por e-mail para a equipe Intercoffee</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="finalizeBtn" type="button">Finalizar Pedido</button>
+    <div class="msg" id="formMsg"></div>
+  </div>
+
+</main>
+
+<footer>
+  <svg width="18" height="28" style="color:var(--tan);vertical-align:middle;margin-right:6px;opacity:.7"><use href="#ic-bean" width="18" height="28"/></svg>
+  Intercoffee &middot; Desde 1962 &middot; Uso interno &middot; Colaboradores
+</footer>
+
+<script>
+// ======= CONFIGURAÇÃO =======
+// O e-mail de destino é definido no servidor (api/send-order.js),
+// não aqui no front-end. Veja o arquivo api/send-order.js para trocar.
+
+// ======= CATÁLOGO (extraído do PDF: coluna Código + SKU) =======
+const CATALOGO = {
+  "Grãos": [
+    ["PA30010027","CAFE TORRADO EM GRAO AMERICA - VENDING - 1 KG"],
+    ["PA30010028","CAFE TORRADO EM GRAO AMERICA - PREMIUM - 1 KG"],
+    ["PA30010040","CAFE TORRADO EM GRAO AMERICA - GOURMET - 1 KG"],
+    ["PA30016024","CAFE TORRADO EM GRAO AMERICA - RISTRETTO - 1KG"],
+    ["PA30010030","CAFE TORRADO EM GRAO - PROPHETA - 1 KG"],
+    ["PA30010057","CAFE TORRADO EM GRAO BEVACAFÉ - PROPHETA - 1 KG"],
+    ["PA30010005","CAFE TORRADO EM GRAO AMERICA - PREMIUM - 500 GR"],
+    ["PA30010006","CAFE TORRADO EM GRAO AMERICA - GOURMET - 500 GR"],
+    ["PA30010089","CAFÉ TORRADO EM GRAO ESPECIAL MOKA AMERICA - 500 GR"],
+    ["PA30010090","CAFÉ TORRADO EM GRAO ESPECIAL ORO AMERICA - 500 GR"]
+  ],
+  "T&M": [
+    ["PA30020005","CAFE TOR. E MOIDO VACUO PURO AMERICA CLASSICO - 500 GR - ST"],
+    ["PA30020004","CAFE TOR. E MOIDO VACUO PURO AMERICA PREMIUM - 500 GR - ST"],
+    ["PA30020003","CAFE TOR. E MOIDO VACUO PURO AMERICA GOURMET - 500 GR - ST"],
+    ["PA30030013","CAFE TORRADO E MOIDO AMERICA - 500 GR - ST"],
+    ["PA30020006","CAFE TORRADO E MOIDO VÁCUO PURO AMERICA EXTRA FORTE - 500 GR- ST"],
+    ["PA30030001","CAFE TORRADO E MOIDO AMERICA EXTRA FORTE - 500 GR- ST"],
+    ["PA30020001","CAFE TOR. E MOIDO VACUO PURO PROPHETA EXTRA FORTE - 500 GR - ST"],
+    ["PA30030002","CAFE TOR. E MOIDO PROPHETA EXTRA FORTE - 500 GR - ST"],
+    ["PA30030006","CAFE TORRADO E MOIDO AMERICA - 250 GR - ST"]
+  ],
+  "Cápsulas": [
+    ["PA30040020","CAPSULA DE ALUMINIO CAFE AMERICA GOURMET CARTUCHO"],
+    ["PA30040021","CAPSULA DE ALUMINIO CAFE AMERICA RISTRETTO"],
+    ["PA30040022","CAPSULA DE ALUMINIO CAFE AMERICA SUAVE"],
+    ["PA30040014","CAPSULA DE CAFE AMERICA - GOURMET - ST"],
+    ["PA30040016","CAPSULA DE CAFE AMERICA - RISTRETO - ST"],
+    ["PA30040015","CAPSULA DE CAFE AMERICA - LEGGERO - ST"]
+  ],
+  "Monodose": [
+    ["PA31010002","PREPARO PO SABOR CAPPUCCINO AMERICA CLASSICO - 20 GR"],
+    ["PA31010003","PREPARO PO SABOR CAPPUCCINO AMERICA ZERO ADIC ACUCARES - 20 GR"],
+    ["PA31030004","PREPARO PO SABOR CAFE COM LEITE AMERICA - 20 GR"]
+  ],
+  "Sachê": [
+    ["PA30050055","CAFE SACHE AMERICA - 7 GR - ST"]
+  ],
+  "Solúvel": [
+    ["PA31040001","CAFE SOLUVEL GRANULADO AMERICA - 510 GR"],
+    ["PA31040006","CAFE PO SOLUVEL AMERICA - 510 GR"]
+  ],
+  "Potes": [
+    ["PA31010015","PREPARO PO SABOR CAPPUCCINO DOCE DE LEITE AMERICA POTE 200GR"],
+    ["PA31010018","PREPARO PO SABOR CAPPUCCINO ZERO ADIC ACUCAR AMERICA POTE 180GR"],
+    ["PA31010072","PREPARO PO SABOR CAPPUCCINO AVELA AMERICA POTE 200GR"],
+    ["PA31020020","PREPARO PO SABOR CHOCOLATE CREMOSO AMERICA POTE 200GR"],
+    ["PA31016017","PREPARO PO SABOR CAPPUCCINO CLÁSSICO AMERICA - POTE 200 GR"],
+    ["PA31010075","PREPARO PO SABOR CAPPUCCINO CHOCOLATE AMERICA - POTE 200 GR"]
+  ],
+  "Misturas América": [
+    ["PA31010017","PREPARO PO SABOR CAPPUCCINO S ADIC ACUCAR AMERICA - 1 KG"],
+    ["PA31010073","PREPARO PO SABOR CAPPUCCINO AMERICA CLASSICO - 1 KG"],
+    ["PA31010074","PREPARO PO SABOR CAPPUCCINO AVELÃ AMÉRICA - 1 KG"],
+    ["PA31010093","PREPARO PO SABOR CAPPUCCINO NAPOLI TRADICIONAL - 1 KG"],
+    ["PA31020055","PREPARO PO SABOR CHOCOLATE S/ ADICAO ACUCAR AMERICA - 1,010 KG"],
+    ["PA31010092","PREPARO PO SABOR CAPPUCCINO AMERICA CLASSICO - 400 GR"],
+    ["PA31010011","PREPARO PO SABOR CAPPUCCINO GOURMET DOCE DE LEITE 400 GR"],
+    ["PA31020021","PREPARO PO SABOR CHOCOLATE CREMOSO AMERICA 400 GR"],
+    ["PA31030018","PREPARO PO SABOR CAFE COM LEITE CREMOSO AMERICA 1 KG"],
+    ["PA31030020","PREPARO PO SABOR CAFE COM LEITE AMERICA - 1 KG"]
+  ],
+  "Bevan": [
+    ["PA31010028","PREPARO PO SABOR CAPPUCCINO BEVACCINO - 1 KG"],
+    ["PA31020006","PREPARO PO SABOR CHOCOLATE BEVACIOCCO - 1 KG"],
+    ["PA31020015","PREPARO PO SABOR CHOCOLATE BEVACIOCCO EUROPA - 1,010 KG"],
+    ["PA31036020","PREPARO PO SABOR LEITE S ADIC ACUCAR BEVALATTE ZERO - 500 GR"],
+    ["PA31030026","PREPARO PO SABOR LEITE BEVALATTE - 1 KG"],
+    ["PA31050001","PREPARO PO SABOR MATE COM LIMAO BEVATE - 1 KG"]
+  ],
+  "Complementares": [
+    ["MR35020022","COPOS PLÁSICO PARA CAFE 165 ML - ST - CX C/ 3000UN"],
+    ["MR35020011","MEXEDORES PLÁSTICOS - CX C/ 3000 UN - ST"],
+    ["MR35030002","FILTRO DE PAPEL AMERICA 102"],
+    ["MR35030001","FILTRO DE PAPEL AMERICA 103"]
+  ],
+  "Outros": [
+    ["MR35040015","CONJUNTO 12 XICARAS E 12 PIRES PARA CAFE (PEQ.) - ST"],
+    ["MR35040016","CONJUNTO 12 XICARAS E 12 PIRES PARA CAFE (GR.) - ST"]
+  ]
+};
+
+// ======= ESTADO =======
+let carrinho = []; // {codigo, sku, categoria, qtd}
+let pagamento = null;
+
+// ======= MONTAR SELECT DE CATEGORIAS =======
+const categoriaSel = document.getElementById('categoria');
+Object.keys(CATALOGO).forEach(cat=>{
+  const opt = document.createElement('option');
+  opt.value = cat; opt.textContent = cat;
+  categoriaSel.appendChild(opt);
+});
+
+const productPanel = document.getElementById('productPanel');
+const produtoSel = document.getElementById('produto');
+
+categoriaSel.addEventListener('change', ()=>{
+  const cat = categoriaSel.value;
+  if(!cat){ productPanel.classList.remove('active'); return; }
+  produtoSel.innerHTML = '';
+  CATALOGO[cat].forEach(([codigo, sku])=>{
+    const opt = document.createElement('option');
+    opt.value = codigo;
+    opt.textContent = codigo + ' — ' + sku;
+    produtoSel.appendChild(opt);
+  });
+  productPanel.classList.add('active');
+});
+
+// ======= ADICIONAR AO CARRINHO =======
+document.getElementById('addBtn').addEventListener('click', ()=>{
+  const cat = categoriaSel.value;
+  if(!cat) return;
+  const codigo = produtoSel.value;
+  const sku = CATALOGO[cat].find(p=>p[0]===codigo)[1];
+  let qtd = parseInt(document.getElementById('quantidade').value, 10);
+  if(!qtd || qtd < 1) qtd = 1;
+
+  const existente = carrinho.find(i=>i.codigo===codigo);
+  if(existente){
+    existente.qtd += qtd;
+  } else {
+    carrinho.push({codigo, sku, categoria:cat, qtd});
+  }
+  renderCarrinho();
+  document.getElementById('quantidade').value = 1;
+});
+
+function renderCarrinho(){
+  const ticket = document.getElementById('ticket');
+  if(carrinho.length === 0){
+    ticket.innerHTML = '<div class="ticket-empty">Nenhum item adicionado ainda.</div>';
+    return;
+  }
+  ticket.innerHTML = carrinho.map((item, idx)=>`
+    <div class="ticket-row">
+      <div class="info">
+        ${item.sku}
+        <span class="code">${item.codigo} · ${item.categoria}</span>
+      </div>
+      <div class="qty-badge">x${item.qtd}</div>
+      <button class="remove-btn" onclick="removerItem(${idx})" type="button">&times;</button>
+    </div>
+  `).join('');
+}
+
+function removerItem(idx){
+  carrinho.splice(idx, 1);
+  renderCarrinho();
+}
+
+// ======= PAGAMENTO =======
+document.querySelectorAll('.pay-card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    pagamento = card.dataset.pay;
+  });
+});
+
+// ======= MÁSCARA SIMPLES DE CPF =======
+document.getElementById('cpf').addEventListener('input', (e)=>{
+  let v = e.target.value.replace(/\D/g,'').slice(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  e.target.value = v;
+});
+
+function cpfValido(cpf){
+  return cpf.replace(/\D/g,'').length === 11;
+}
+
+// ======= FINALIZAR PEDIDO =======
+document.getElementById('finalizeBtn').addEventListener('click', async ()=>{
+  const nome = document.getElementById('nome').value.trim();
+  const cpf = document.getElementById('cpf').value.trim();
+  const btn = document.getElementById('finalizeBtn');
+
+  if(!nome){
+    return showMsg('Preencha seu nome completo.', 'error');
+  }
+  if(!cpfValido(cpf)){
+    return showMsg('Informe um CPF válido (11 dígitos).', 'error');
+  }
+  if(carrinho.length === 0){
+    return showMsg('Adicione ao menos um produto ao pedido.', 'error');
+  }
+  if(!pagamento){
+    return showMsg('Selecione a forma de pagamento.', 'error');
+  }
+
+  const payload = {
+    nome,
+    cpf,
+    pagamento,
+    itens: carrinho.map(i => ({
+      codigo: i.codigo,
+      sku: i.sku,
+      categoria: i.categoria,
+      quantidade: i.qtd
+    }))
+  };
+
+  btn.disabled = true;
+  const textoOriginal = btn.textContent;
+  btn.textContent = 'Enviando pedido...';
+
+  try{
+    const resp = await fetch('/api/send-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json().catch(()=> ({}));
+
+    if(!resp.ok){
+      throw new Error(data.error || 'Falha ao enviar o pedido.');
+    }
+
+    showMsg('Pedido enviado com sucesso! A equipe Intercoffee já recebeu por e-mail.', 'success');
+
+    // Limpa o formulário após o envio
+    carrinho = [];
+    pagamento = null;
+    renderCarrinho();
+    document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('selected'));
+    document.getElementById('nome').value = '';
+    document.getElementById('cpf').value = '';
+  }catch(err){
+    showMsg(err.message || 'Não foi possível enviar o pedido. Tente novamente.', 'error');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+  }
+});
+
+function showMsg(text, type){
+  const msg = document.getElementById('formMsg');
+  msg.textContent = text;
+  msg.className = 'msg show ' + type;
+}
+</script>
+</body>
+</html>

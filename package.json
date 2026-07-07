@@ -1,0 +1,9 @@
+{
+  "name": "intercoffee-pedidos-colaboradores",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Formulário de pedidos internos Intercoffee com envio automático de e-mail (Vercel + Resend).",
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
