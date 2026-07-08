@@ -166,6 +166,20 @@ document.querySelectorAll('.pay-card').forEach(card=>{
   });
 });
 
+// ======= MODAL: PEDIDO CONFIRMADO =======
+const orderModal = document.getElementById('orderModal');
+function openOrderModal(){
+  orderModal.classList.add('show');
+}
+function closeOrderModal(){
+  orderModal.classList.remove('show');
+}
+document.getElementById('modalCloseBtn').addEventListener('click', closeOrderModal);
+orderModal.addEventListener('click', (e)=>{
+  if(e.target === orderModal) closeOrderModal();
+}); 
+// ==== MODAL Fim =====
+
 // ======= MÁSCARA SIMPLES DE CPF =======
 document.getElementById('cpf').addEventListener('input', (e)=>{
   let v = e.target.value.replace(/\D/g,'').slice(0,11);
@@ -228,6 +242,7 @@ document.getElementById('finalizeBtn').addEventListener('click', async ()=>{
     }
 
     showMsg('Pedido enviado com sucesso! A equipe Intercoffee já recebeu por e-mail.', 'success');
+    openOrderModal();
 
     // Limpa o formulário após o envio
     carrinho = [];
