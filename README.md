@@ -54,3 +54,6 @@ npx vercel dev
 
 Isso sobe o site e a função `/api/send-order` localmente para testes antes do deploy.
 # pedidosinterno
+
+<img width="925" height="881" alt="image" src="https://github.com/user-attachments/assets/15956372-4ef6-4316-b49f-040039a12f9c" />
+
