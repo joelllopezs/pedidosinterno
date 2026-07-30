@@ -15,7 +15,7 @@
 const { Resend } = require('resend');
 
 const EMAIL_DESTINO_PADRAO = 'suporte@intercoffee.com.br'; // <-- e-mail de teste, troque depois
-const EMAIL_REMETENTE_PADRAO = 'Intercoffee <pedidos@intercoffee.com.br>';
+const EMAIL_REMETENTE_PADRAO = 'Intercoffee <onboarding@resend.dev>';
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
