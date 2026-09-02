@@ -228,21 +228,39 @@ document.getElementById('finalizeBtn').addEventListener('click', async ()=>{
   const textoOriginal = btn.textContent;
   btn.textContent = 'Enviando pedido...';
 
-  try{
-    const resp = await fetch('/api/send-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+ const NUMERO_EMPRESA = '5514997166089';
 
-    const data = await resp.json().catch(()=> ({}));
+const itensTexto = carrinho.map((item, index) => {
+  return `*${index + 1}. ${item.sku}*
+Código: ${item.codigo}
+Quantidade: *${item.qtd}*`;
+}).join('\n\n');
 
-    if(!resp.ok){
-      throw new Error(data.error || 'Falha ao enviar o pedido.');
-    }
+const mensagem = 
+`*PEDIDO DE CAFÉ INTERNO — INTERCOFFEE*
+━━━━━━━━━━━━━━━━━━━━
 
-    showMsg('Pedido enviado com sucesso! A equipe Intercoffee já recebeu por e-mail.', 'success');
-    openOrderModal();
+*COLABORADOR*
+Nome: ${nome}
+CPF: ${cpf}
+Forma de pagamento: ${pagamento}
+
+*ITENS SOLICITADOS*
+━━━━━━━━━━━━━━━━━━━━
+
+${itensTexto}
+
+━━━━━━━━━━━━━━━━━━━━
+
+Pedido realizado através do sistema interno.
+
+A equipe Intercoffee recebeu sua solicitação e dará continuidade ao atendimento.
+
+Obrigado!`;
+
+const urlWhatsApp = `https://wa.me/${NUMERO_EMPRESA}?text=${encodeURIComponent(mensagem)}`;
+
+window.open(urlWhatsApp, '_blank');
 
     // Limpa o formulário após o envio
     carrinho = [];
@@ -251,16 +269,9 @@ document.getElementById('finalizeBtn').addEventListener('click', async ()=>{
     document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('selected'));
     document.getElementById('nome').value = '';
     document.getElementById('cpf').value = '';
-  }catch(err){
-    showMsg(err.message || 'Não foi possível enviar o pedido. Tente novamente.', 'error');
-  }finally{
-    btn.disabled = false;
-    btn.textContent = textoOriginal;
-  }
-});
 
 function showMsg(text, type){
   const msg = document.getElementById('formMsg');
   msg.textContent = text;
   msg.className = 'msg show ' + type;
-}
+}})
